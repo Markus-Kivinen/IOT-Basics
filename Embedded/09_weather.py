@@ -1,6 +1,6 @@
-from machine import Pin
-import utime
 import dht
+import utime
+from machine import Pin
 
 sensor = dht.DHT22(Pin(15))
 

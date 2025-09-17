@@ -1,4 +1,5 @@
 import time
+
 from machine import Pin
 
 motion = Pin(28, Pin.OUT)

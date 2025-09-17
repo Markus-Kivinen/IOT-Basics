@@ -1,6 +1,6 @@
-from machine import Pin
-import utime
 import urandom
+import utime
+from machine import Pin
 
 led = Pin(15, Pin.OUT)
 button = Pin(14, Pin.IN, Pin.PULL_DOWN)

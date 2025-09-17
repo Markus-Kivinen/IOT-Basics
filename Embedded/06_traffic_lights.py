@@ -1,5 +1,5 @@
-from machine import Pin
 import utime
+from machine import Pin
 
 led_red = Pin(15, Pin.OUT)
 led_yellow = Pin(14, Pin.OUT)

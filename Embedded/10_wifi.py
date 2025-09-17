@@ -1,8 +1,8 @@
-from machine import Pin
-import network
-import utime
-import urequests
 import dht
+import network
+import urequests
+import utime
+from machine import Pin
 
 API_KEY = "************"
 API_BASE_URL = "https://api.thingspeak.com/update"
@@ -26,8 +26,8 @@ while True:
         humidity: float = sensor.humidity()
         print(f"Temperature: {temp:.1f}°C\nHumidity: {humidity:.1f}%")
         API_URL = (
-            f'{API_BASE_URL}?api_key={API_KEY}'
-            f'&field1={temp}&field2={humidity}'
+            f"{API_BASE_URL}?api_key={API_KEY}"
+            f"&field1={temp}&field2={humidity}"
         )
         urequests.get(API_URL)
     except OSError as e:

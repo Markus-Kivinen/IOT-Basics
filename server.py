@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
-from pydantic import BaseModel, ConfigDict
-
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -14,18 +13,10 @@ class SensorData(BaseModel):
     model_config = {
         "json_schema_extra": {
             "examples": [
-                {
-                    "temperature": 22.5,
-                    "humidity": 55,
-                    "status": "OK"
-                },
-                {
-                    "temperature": 50.0,
-                    "humidity": 65,
-                    "status": "Warning"
-                }
-            ]
-        }
+                {"temperature": 22.5, "humidity": 55, "status": "OK"},
+                {"temperature": 50.0, "humidity": 65, "status": "Warning"},
+            ],
+        },
     }
 
 

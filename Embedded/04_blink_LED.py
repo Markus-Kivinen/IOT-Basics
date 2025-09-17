@@ -1,4 +1,5 @@
 import time
+
 from machine import Pin
 
 time.sleep(0.1)

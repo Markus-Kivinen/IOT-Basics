@@ -1,35 +1,47 @@
-Create virtual environment and install dependencies:  
+### Requirements
+- Python 3.13+
+
+### Install
+Create the virtual environment ( choose one ):
 ```bash
-./install.sh
-```
-Or with uv:  
+python -m venv .venv
+# Using uv
+uv venv  
+``` 
+
+Activate the virtual environment:
 ```bash
-./install_uv.sh
+# Linux / macOS
+source .venv/bin/activate
+# Windows (PowerShell)
+.\.venv\Scripts\activate
 ```
 
-
-Run the server in production mode:
+Install dependencies ( choose one ):
 ```bash
-./server.sh
+pip install -r requirements.txt
+# Using uv
+uv pip install -r pyproject.toml  
 ```
 
-Run the server in development mode:
+### Running the Server
+After activating the environment:  
+
+Start the server:
 ```bash
-./server.sh dev
+fastapi dev server.py  # with auto-reload
+fastapi run server.py  # Production mode
 ```
 
-Alternatively you can run the server directly with uvicorn ( in activated environment):
+Other options:
 ```bash
-uvicorn server:app --host 0.0.0.0 --port 8000
-uvicorn server:app --host 0.0.0.0 --port 8000 --reload
-```
-or fastapi
-```
-fastapi run server.py
-fastapi dev server.py
+uvicorn server:app --host 0.0.0.0 --port 8000 
+uvicorn server:app --host 0.0.0.0 --port 8000 --reload  
+# without activating environment
+.\.venv\Scripts\python.exe -m fastapi run server.py
+# without activating environment using uv
+uv run -m fastapi run server.py
 ```
 
-
-
-API documentation is available at:
+API documentation is available at:  
 http://localhost:8000/docs and http://localhost:8000/redoc

@@ -6,10 +6,10 @@ led_yellow = Pin(14, Pin.OUT)
 led_green = Pin(13, Pin.OUT)
 leds = [
     # Pin / Seconds
-    [led_red, 2],
-    [led_yellow, 2],
-    [led_green, 5],
-    [led_yellow, 2],
+    (led_red, 2),
+    (led_yellow, 2),
+    (led_green, 5),
+    (led_yellow, 2),
 ]
 button = Pin(16, Pin.IN, Pin.PULL_DOWN)
 buzzer = Pin(12, Pin.OUT)

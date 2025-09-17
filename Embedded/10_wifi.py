@@ -5,25 +5,31 @@ import urequests
 import dht
 
 API_KEY = "************"
+API_BASE_URL = "https://api.thingspeak.com/update"
+ssid = "Wokwi-GUEST"
+password = ""
 
 print("Connecting to WiFi", end="")
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
-wlan.connect("Wokwi-GUEST", "")
+wlan.connect(ssid, password)
 while not wlan.isconnected():
-  print(".", end="")
-  utime.sleep(0.1)
+    print(".", end="")
+    utime.sleep(0.1)
 print(" Connected!")
 
 sensor = dht.DHT22(Pin(15))
 while True:
     try:
         sensor.measure()
-        temperature = sensor.temperature()
-        humidity = sensor.humidity()
-        API_URL = f'https://api.thingspeak.com/update?api_key={API_KEY}&field1={temperature}&field2={humidity}'
-        print(f"Temperature: {temperature:.1f}°C\nHumidity: {humidity:.1f}%")
-        r = urequests.get(API_URL)
+        temp: float = sensor.temperature()
+        humidity: float = sensor.humidity()
+        print(f"Temperature: {temp:.1f}°C\nHumidity: {humidity:.1f}%")
+        API_URL = (
+            f'{API_BASE_URL}?api_key={API_KEY}'
+            f'&field1={temp}&field2={humidity}'
+        )
+        urequests.get(API_URL)
     except OSError as e:
         print("Sensor read error:", e)
     utime.sleep(2)

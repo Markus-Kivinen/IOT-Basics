@@ -1,0 +1,31 @@
+[project]
+name = "IoT"
+version = "0.1.0"
+dependencies = [
+  "fastapi[standard]>=0.116.2",
+  "uvicorn[standard]>=0.35.0"
+]
+requires-python = ">=3.13"
+
+[project.optional-dependencies]
+stubs = [
+  "micropython-rp2-pico_w-stubs"
+]
+
+
+# ###################################################################
+# basedpyright options:
+# ###################################################################
+
+[tool.basedpyright]
+ignore = ["**/typings"]
+exclude = [".*", "__*", "**/typings"]
+
+stubPath = "typings"
+typeshedPath = "typings"
+reportMissingModuleSource = "none"
+reportUnknownMemberType = "none"
+reportUnusedCallResult = "none"
+reportUnusedParameter = "none"
+reportUnknownVariableType = "none"
+reportUnannotatedClassAttribute = "none"

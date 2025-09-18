@@ -29,18 +29,18 @@ After activating the environment:
 
 Start the server:
 ```bash
-fastapi dev server.py  # with auto-reload
 fastapi run server.py  # Production mode
+fastapi dev server.py  # Auto-reload
+# With uv
+uv run server
+uv run dev
 ```
 
 Other options:
 ```bash
 uvicorn server:app --host 0.0.0.0 --port 8000 
 uvicorn server:app --host 0.0.0.0 --port 8000 --reload  
-# without activating environment
-.\.venv\Scripts\python.exe -m fastapi run server.py
-# without activating environment using uv
-uv run -m fastapi run server.py
+
 ```
 
 API documentation is available at:  

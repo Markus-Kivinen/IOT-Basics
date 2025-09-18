@@ -1,3 +1,5 @@
 typings
 .vscode
 __pycache__
+*egg-info
+uv.lock

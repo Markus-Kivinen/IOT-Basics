@@ -12,6 +12,16 @@ stubs = [
   "micropython-rp2-pico_w-stubs"
 ]
 
+[tool.uv]
+package = true
+
+[tool.setuptools]
+py-modules = ["server"]
+
+[project.scripts]
+server = "server:start_server"
+dev = "server:start_dev_server"
+
 
 # ###################################################################
 # basedpyright options:
@@ -36,7 +46,7 @@ reportUnannotatedClassAttribute = "none"
 
 [tool.ruff.lint]
 select = ["ALL"]
-ignore = ["T201", "INP001", "D100", "D101", "D103"]
+ignore = ["T201", "INP001", "D100", "D101", "D103", "S104"]
 
 [tool.ruff]
 line-length = 120

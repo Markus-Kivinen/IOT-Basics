@@ -1,3 +1,4 @@
+import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
@@ -35,3 +36,13 @@ async def root() -> HTMLResponse:
 @app.get("/api/sensor", name="get_sensor_data")
 async def get_sensor_data() -> SensorData:
     return SensorData(temperature=22.5, humidity=55, status="OK")
+
+
+def start_server() -> None:
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+
+def start_dev_server() -> None:
+    uvicorn.run("server:app", host="0.0.0.0", port=8000, reload=True)
+
+if __name__ == "__main__":
+    start_server()

@@ -14,14 +14,14 @@ Activate the virtual environment:
 # Linux / macOS
 source .venv/bin/activate
 # Windows (PowerShell)
-.\.venv\Scripts\activate
+.venv\Scripts\activate
 ```
 
 Install dependencies ( choose one ):
 ```bash
-pip install -r requirements.txt
+pip install -r pylock.toml
 # Using uv
-uv pip install -r pyproject.toml  
+uv pip install -r pylock.toml
 ```
 
 ### Running the Server

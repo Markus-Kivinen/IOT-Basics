@@ -5,7 +5,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse
 
 from src import db
-from src.models import SensorData
+from src.models import SensorData, User, UserData
 
 app = FastAPI()
 
@@ -22,12 +22,21 @@ async def root() -> HTMLResponse:
     return HTMLResponse(content=response_html)
 
 
-@app.get("/api/sensor", name="get_sensor_data", responses={200: {"model": list[SensorData]}})
+@app.get(
+    "/api/sensor",
+    name="get_sensor_data",
+    responses={200: {"model": list[SensorData]}},
+)
 async def get_sensor_data() -> list[SensorData]:
     return db.get_data()
 
 
-@app.post("/api/sensor", name="post_sensor_data", status_code=201, responses={201: {"model": SensorData}})
+@app.post(
+    "/api/sensor",
+    name="post_sensor_data",
+    status_code=201,
+    responses={201: {"model": SensorData}},
+)
 async def post_sensor_data(data: SensorData, request: Request) -> SensorData:
     db.insert_data(data)
     return data
@@ -41,16 +50,22 @@ async def post_sensor_data(data: SensorData, request: Request) -> SensorData:
         201: {
             "description": "User created successfully",
             "content": {
-                "application/json": {
-                    "example": {"message": "User created successfully"}
-                }
+                "application/json": {"example": {"id": 1, "username": "admin"}}
             },
         }
     },
 )
-async def create_user(username: str, password: str) -> dict[str, str]:
-    db.create_user(username, password)
-    return {"message": "User created successfully"}
+async def create_user(user_data: UserData) -> User:
+    return db.create_user(user_data.username, user_data.password)
+
+
+@app.get(
+    "/api/users",
+    name="get_users",
+    responses={200: {"model": list[User]}},
+)
+async def get_users() -> list[User]:
+    return db.get_users()
 
 
 @app.post(
@@ -78,8 +93,7 @@ async def create_user(username: str, password: str) -> dict[str, str]:
 )
 async def verify_user(username: str, password: str) -> HTMLResponse:
     if db.verify_user(username, password):
-        return HTMLResponse(content={"message": "User verified successfully"}
-        )
+        return HTMLResponse(content={"message": "User verified successfully"})
     raise HTTPException(status_code=401, detail="Invalid username or password")
 
 
@@ -92,7 +106,15 @@ def start_server() -> None:
 
 
 def start_dev_server() -> None:
-    uvicorn.run("src.server:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run(
+        "src.server:app",
+        host="0.0.0.0",
+        port=8000,
+        reload=True,
+        log_level="info",
+        access_log=True,
+    )
+
 
 if __name__ == "__main__":
     start_server()

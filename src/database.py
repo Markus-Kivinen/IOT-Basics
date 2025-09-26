@@ -1,14 +1,13 @@
 import sqlite3
 
-from passlib.context import CryptContext
+import bcrypt
 
-from src.models import SensorData
+from src.models import SensorData, User
 
 
 class Database:
     def __init__(self, name: str) -> None:
         self.conn = sqlite3.connect(name)
-        self.pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
         self.init_db()
 
     def init_db(self) -> None:
@@ -51,9 +50,14 @@ class Database:
             for row in rows
         ]
 
-    def verify_user(
-        self, username: str, password: str
-    ) -> bool:
+
+    def verify_password(self, plain_password: str, hashed_password: str) -> bool:
+        return bcrypt.checkpw(
+            bytes(plain_password, encoding="utf-8"),
+            bytes(hashed_password, encoding="utf-8"),
+        )
+
+    def verify_user(self, username: str, password: str) -> bool:
         cursor = self.conn.cursor()
         cursor.execute(
             """
@@ -65,12 +69,25 @@ class Database:
         if row is None:
             return False
         stored_password = row[0]
-        return self.pwd_context.verify(password, stored_password)
+        return self.verify_password(password, stored_password)
 
     def get_password_hash(self, password: str) -> str:
-        return self.pwd_context.hash(password)
+        return bcrypt.hashpw(
+            bytes(password, encoding="utf-8"),
+            bcrypt.gensalt(),
+        ).decode("utf-8")
 
-    def create_user(self, username: str, password: str) -> None:
+    def get_users(self) -> list[User]:
+        cursor = self.conn.cursor()
+        cursor.execute(
+            """
+            SELECT id, username FROM users
+            """
+        )
+        rows = cursor.fetchall()
+        return [User(id=row[0], username=row[1]) for row in rows]
+
+    def create_user(self, username: str, password: str) -> User:
         password = self.get_password_hash(password)
         cursor = self.conn.cursor()
         cursor.execute(
@@ -90,3 +107,4 @@ class Database:
             (username, password),
         )
         self.conn.commit()
+        return User(id=cursor.lastrowid, username=username)

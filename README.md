@@ -4,6 +4,7 @@
 
 
 ### Configure
+Configure Embedded/10_wifi.py: replace API_URL with your machine’s IP and port  
 Download Pico W firmware and place it in Embedded, add the path to `Embedded/wokwi.toml`  
 Install Wokwi VS Code extension https://docs.wokwi.com/vscode/getting-started  
 

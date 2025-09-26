@@ -46,7 +46,7 @@ reportUnannotatedClassAttribute = "none"
 
 [tool.ruff.lint]
 select = ["ALL"]
-ignore = ["T201", "INP001", "D100", "D101", "D103", "S104"]
+ignore = ["T201", "INP001", "D100", "D101", "D103", "S104", "ARG001", "FBT003"]
 
 [tool.ruff]
 line-length = 120

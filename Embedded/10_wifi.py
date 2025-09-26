@@ -4,10 +4,11 @@ import urequests
 import utime
 from machine import Pin
 
-API_KEY = "************"
-API_BASE_URL = "https://api.thingspeak.com/update"
+API_URL = "http://maketti-spagetti.loca.lt/api/sensor"
 ssid = "Wokwi-GUEST"
 password = ""
+
+sensor = dht.DHT22(Pin(15))
 
 print("Connecting to WiFi", end="")
 wlan = network.WLAN(network.STA_IF)
@@ -18,18 +19,17 @@ while not wlan.isconnected():
     utime.sleep(0.1)
 print(" Connected!")
 
-sensor = dht.DHT22(Pin(15))
 while True:
     try:
         sensor.measure()
         temp: float = sensor.temperature()
         humidity: float = sensor.humidity()
-        print(f"Temperature: {temp:.1f}°C\nHumidity: {humidity:.1f}%")
-        API_URL = (
-            f"{API_BASE_URL}?api_key={API_KEY}"
-            f"&field1={temp}&field2={humidity}"
+        print(f"Temperature: {temp:.1f}C, Humidity: {humidity:.1f}%")
+        urequests.post(
+            API_URL,
+            json={"temperature": temp, "humidity": humidity, "status": "OK"},
+            headers={"Content-Type": "application/json"},
         )
-        urequests.get(API_URL)
     except OSError as e:
         print("Sensor read error:", e)
-    utime.sleep(2)
+    utime.sleep(10)

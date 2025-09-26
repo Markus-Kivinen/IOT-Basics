@@ -3,3 +3,4 @@ typings
 __pycache__
 *egg-info
 uv.lock
+node_modules

@@ -7,10 +7,10 @@ button = Pin(14, Pin.IN, Pin.PULL_DOWN)
 timer_start = 0
 
 
-def button_handler(pin: Pin):
+def button_handler(pin: Pin) -> None:
     button.irq(handler=None)
     reaction_time = utime.ticks_diff(utime.ticks_ms(), timer_start)
-    print(f'Your reaction time was {reaction_time} milliseconds')
+    print(f"Your reaction time was {reaction_time} milliseconds")
 
 
 led.value(1)

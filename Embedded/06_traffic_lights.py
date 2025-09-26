@@ -21,7 +21,7 @@ while True:
         led_red.value(0)
         led_red.value(0)
         led_green.value(1)
-        for i in range(10):
+        for _ in range(10):
             buzzer.value(1)
             utime.sleep(0.2)
             buzzer.value(0)

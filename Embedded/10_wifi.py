@@ -4,7 +4,7 @@ import urequests
 import utime
 from machine import Pin
 
-API_URL = "http://maketti-spagetti.loca.lt/api/sensor"
+API_URL = "http://192.168.50.147:8000/api/sensor"
 ssid = "Wokwi-GUEST"
 password = ""
 

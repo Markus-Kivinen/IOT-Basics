@@ -62,10 +62,3 @@ python -m mpremote connect port:rfc2217://localhost:4000 run Embedded/10_wifi.py
 # With uv
 uv run mpremote connect port:rfc2217://localhost:4000 run Embedded/10_wifi.py
 ```
-
-### Tunneling
-To expose your local server to the internet, you can use a tunneling service. This repo uses `localtunnel`.
-```
-npm install
-npm run tunnel
-```

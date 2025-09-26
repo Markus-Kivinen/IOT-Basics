@@ -36,8 +36,8 @@ After activating the environment:
 
 Start the server:
 ```bash
-fastapi run server.py  # Production mode
-fastapi dev server.py  # Auto-reload
+fastapi run src/server.py  # Production mode
+fastapi dev src/server.py  # Auto-reload
 # With uv
 uv run server
 uv run dev
@@ -45,8 +45,8 @@ uv run dev
 
 Other options:
 ```bash
-uvicorn server:app --host 0.0.0.0 --port 8000 
-uvicorn server:app --host 0.0.0.0 --port 8000 --reload  
+uvicorn src.server:app --host 0.0.0.0 --port 8000 
+uvicorn src.server:app --host 0.0.0.0 --port 8000 --reload  
 ```
 
 API documentation is available at:  
@@ -54,6 +54,8 @@ http://localhost:8000/docs and http://localhost:8000/redoc
 
 
 ### Simulating pico w 
+Start Wokwi simulator with F1 -> `Wokwi: Start Simulation` or by opening diagram.json  
+Wokwi simulator has to be visible to connect to it with mpremote
 ```
 # With .venv activated
 python -m mpremote connect port:rfc2217://localhost:4000 run Embedded/10_wifi.py

@@ -4,7 +4,8 @@ version = "0.1.0"
 dependencies = [
   "fastapi[standard]>=0.116.2",
   "uvicorn[standard]>=0.35.0",
-  "mpremote>=1.26.1"
+  "mpremote>=1.26.1",
+  "passlib[bcrypt]>=1.7.4",
 ]
 requires-python = ">=3.13"
 
@@ -17,11 +18,11 @@ stubs = [
 package = true
 
 [tool.setuptools]
-py-modules = ["server"]
+packages = ["src"]
 
 [project.scripts]
-server = "server:start_server"
-dev = "server:start_dev_server"
+server = "src.server:start_server"
+dev = "src.server:start_dev_server"
 
 
 # ###################################################################
@@ -40,6 +41,8 @@ reportUnusedCallResult = "none"
 reportUnusedParameter = "none"
 reportUnknownVariableType = "none"
 reportUnannotatedClassAttribute = "none"
+reportMissingTypeStubs = "none"
+reportAny = "none"
 
 # ###################################################################
 # ruff options:
@@ -47,7 +50,20 @@ reportUnannotatedClassAttribute = "none"
 
 [tool.ruff.lint]
 select = ["ALL"]
-ignore = ["T201", "INP001", "D100", "D101", "D103", "S104", "ARG001", "FBT003"]
+ignore = [
+  "T201",  # print statement found.
+  "INP001",  # missing __init__ file
+  "S104",  # Hardcoded binding to IP address
+  "ARG001",  # Unused arguments
+  "FBT003",  # Undocumented public class definition
+  "D107",  # Missing docstring in __init__
+  "D100",  # Missing docstring in public module
+  "D101",  # Missing docstring in class
+  "D102",  # Missing docstring in public function
+  "D103",  # Missing docstring in public method
+  "D104",  # Missing docstring in public package
+  "COM812", # Missing trailing comma
+]
 
 [tool.ruff]
 line-length = 120

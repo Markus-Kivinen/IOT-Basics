@@ -5,3 +5,4 @@ __pycache__
 uv.lock
 node_modules
 Embedded/*.uf2
+sensor_data.db

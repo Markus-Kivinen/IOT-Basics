@@ -4,7 +4,6 @@
 
 
 ### Configure
-Change subdomain in `package.json` and `Embedded/10_wifi.py`  
 Download Pico W firmware and place it in Embedded, add the path to `Embedded/wokwi.toml`  
 Install Wokwi VS Code extension https://docs.wokwi.com/vscode/getting-started  
 

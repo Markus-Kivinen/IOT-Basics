@@ -4,3 +4,4 @@ __pycache__
 *egg-info
 uv.lock
 node_modules
+Embedded/*.uf2

@@ -1,5 +1,12 @@
 ### Requirements
 - Python 3.13+
+- npm
+
+
+### Configure
+Change subdomain in `package.json` and `Embedded/10_wifi.py`  
+Download Pico W firmware and place it in Embedded, add the path to `Embedded/wokwi.toml`  
+Install Wokwi VS Code extension https://docs.wokwi.com/vscode/getting-started  
 
 ### Install
 Create the virtual environment ( choose one ):
@@ -40,8 +47,23 @@ Other options:
 ```bash
 uvicorn server:app --host 0.0.0.0 --port 8000 
 uvicorn server:app --host 0.0.0.0 --port 8000 --reload  
-
 ```
 
 API documentation is available at:  
 http://localhost:8000/docs and http://localhost:8000/redoc
+
+
+### Simulating pico w 
+```
+# With .venv activated
+python -m mpremote connect port:rfc2217://localhost:4000 run Embedded/10_wifi.py
+# With uv
+uv run mpremote connect port:rfc2217://localhost:4000 run Embedded/10_wifi.py
+```
+
+### Tunneling
+To expose your local server to the internet, you can use a tunneling service. This repo uses `localtunnel`.
+```
+npm install
+npm run tunnel
+```

@@ -3,7 +3,8 @@ name = "IoT"
 version = "0.1.0"
 dependencies = [
   "fastapi[standard]>=0.116.2",
-  "uvicorn[standard]>=0.35.0"
+  "uvicorn[standard]>=0.35.0",
+  "mpremote>=1.26.1"
 ]
 requires-python = ">=3.13"
 

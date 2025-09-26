@@ -25,11 +25,12 @@ while True:
         temp: float = sensor.temperature()
         humidity: float = sensor.humidity()
         print(f"Temperature: {temp:.1f}C, Humidity: {humidity:.1f}%")
-        urequests.post(
+        r = urequests.post(
             API_URL,
             json={"temperature": temp, "humidity": humidity, "status": "OK"},
             headers={"Content-Type": "application/json"},
         )
+        r.close()
     except OSError as e:
         print("Sensor read error:", e)
     utime.sleep(10)

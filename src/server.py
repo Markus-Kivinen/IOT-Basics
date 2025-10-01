@@ -21,8 +21,8 @@ app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
 
-temp_alert = float(getenv("TEMP_ALERT", "50.0"))
-humidity_alert = float(getenv("HUMIDITY_ALERT", "80.0"))
+TEMP_ALERT = float(getenv("TEMP_ALERT", "50.0"))
+HUMIDITY_ALERT = float(getenv("HUMIDITY_ALERT", "80.0"))
 WEBHOOK_URL = getenv("WEBHOOK_URL")
 
 
@@ -63,13 +63,12 @@ async def get_sensor_data(
     responses={201: {"model": SensorData}},
 )
 async def post_sensor_data(data: SensorData, request: Request) -> SensorData:
-    if WEBHOOK_URL and (data.temperature >= temp_alert or data.humidity >= humidity_alert):
-        # get current time
+    if WEBHOOK_URL and (data.temperature >= TEMP_ALERT or data.humidity >= HUMIDITY_ALERT):
         timestamp = date.datetime.now(tz=date.UTC).strftime("%Y-%m-%d %H:%M:%S")
         msg = [f"**{timestamp}**."]
-        if data.temperature >= temp_alert:
+        if data.temperature >= TEMP_ALERT:
             msg.append(f"High temperature detected: {data.temperature}°C.")
-        if data.humidity >= humidity_alert:
+        if data.humidity >= HUMIDITY_ALERT:
             msg.append(f"High humidity detected: {data.humidity}%.")
         async with httpx.AsyncClient() as client:
             await client.post(
@@ -98,8 +97,8 @@ async def websocket_endpoint(websocket: WebSocket) -> None:
     except asyncio.CancelledError:
         logger.warning("WebSocket task was cancelled")
         raise
-    except Exception as e:
-        logger.exception("Unexpected error in WebSocket connection: %s", e)
+    except Exception:
+        logger.exception("Unexpected error in WebSocket connection")
     finally:
         try:
             await websocket.close()

@@ -11,7 +11,7 @@ Install Wokwi VS Code extension https://docs.wokwi.com/vscode/getting-started
 ### Webhook ( optional )
 <img width="355" height="107" alt="image" src="https://github.com/user-attachments/assets/28cbfc28-4f09-439d-aa98-792734397a0d" />
 
-Create a `.env` file based on `.env.example` and set your WEBHOOK_URL  
+Create a `src/.env` file based on `src/.env.example` and set your WEBHOOK_URL  
 use TEMP_ALERT and HUMIDITY_ALERT to set alert thresholds
 
 ### Install

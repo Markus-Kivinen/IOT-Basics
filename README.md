@@ -59,7 +59,9 @@ uvicorn src.server:app --host 0.0.0.0 --port 8000 --reload
 
 API documentation is available at:  
 http://localhost:8000/docs and http://localhost:8000/redoc
-<img width="1927" height="1167" alt="image" src="https://github.com/user-attachments/assets/7b5a105b-c1fe-49b7-a9ce-1c68f0ef13da" />
+<img width="996" height="1090" alt="image" src="https://github.com/user-attachments/assets/731ec09d-fd21-4f4e-a7c6-4686f2976253" />
+<img width="1911" height="881" alt="image" src="https://github.com/user-attachments/assets/d5b41d58-6e9a-4b3d-8d4d-eaec6d4793b0" />
+
 
 
 

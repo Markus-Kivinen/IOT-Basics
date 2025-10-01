@@ -9,6 +9,7 @@ Download Pico W firmware and place it in Embedded, add the path to `Embedded/wok
 Install Wokwi VS Code extension https://docs.wokwi.com/vscode/getting-started  
 
 ### Webhook ( optional )
+<img width="355" height="107" alt="image" src="https://github.com/user-attachments/assets/28cbfc28-4f09-439d-aa98-792734397a0d" />
 Create a `.env` file based on `.env.example` and set your WEBHOOK_URL  
 use TEMP_ALERT and HUMIDITY_ALERT to set alert thresholds
 
@@ -52,9 +53,13 @@ Other options:
 uvicorn src.server:app --host 0.0.0.0 --port 8000 
 uvicorn src.server:app --host 0.0.0.0 --port 8000 --reload  
 ```
+<img width="941" height="585" alt="image" src="https://github.com/user-attachments/assets/2e63ef56-b758-4c24-9526-294588f6d6e9" />
+
 
 API documentation is available at:  
 http://localhost:8000/docs and http://localhost:8000/redoc
+<img width="1927" height="1167" alt="image" src="https://github.com/user-attachments/assets/7b5a105b-c1fe-49b7-a9ce-1c68f0ef13da" />
+
 
 
 ### Simulating pico w 

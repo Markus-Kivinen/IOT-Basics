@@ -1,5 +1,5 @@
 import asyncio
-import datetime as date
+import datetime as dt
 import logging
 from os import getenv
 from typing import Annotated
@@ -7,7 +7,14 @@ from typing import Annotated
 import dotenv
 import httpx
 import uvicorn
-from fastapi import FastAPI, HTTPException, Query, Request, WebSocket, WebSocketDisconnect
+from fastapi import (
+    FastAPI,
+    HTTPException,
+    Query,
+    Request,
+    WebSocket,
+    WebSocketDisconnect,
+)
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
@@ -63,21 +70,27 @@ async def get_sensor_data(
     responses={201: {"model": SensorData}},
 )
 async def post_sensor_data(data: SensorInput, request: Request) -> SensorData:
-    if WEBHOOK_URL and (data.temperature >= TEMP_ALERT or data.humidity >= HUMIDITY_ALERT):
-        timestamp = date.datetime.now(tz=date.UTC).strftime("%Y-%m-%d %H:%M:%S")
+    sensor_data = db.insert_data(data)
+    if WEBHOOK_URL and (
+        sensor_data.temperature >= TEMP_ALERT or sensor_data.humidity >= HUMIDITY_ALERT
+    ):
+        timestamp_dt = dt.datetime.strptime(
+            sensor_data.timestamp, "%Y-%m-%d %H:%M:%S"
+        ).replace(tzinfo=dt.UTC)  # pyright: ignore[reportArgumentType]
+        local_tz = dt.datetime.now().astimezone().tzinfo
+        timestamp_local = timestamp_dt.astimezone(local_tz)
+        timestamp: str = timestamp_local.strftime("%Y-%m-%d %H:%M:%S")
         msg = [f"**{timestamp}**."]
-        if data.temperature >= TEMP_ALERT:
-            msg.append(f"High temperature detected: {data.temperature}°C.")
-        if data.humidity >= HUMIDITY_ALERT:
-            msg.append(f"High humidity detected: {data.humidity}%.")
+        if sensor_data.temperature >= TEMP_ALERT:
+            msg.append(f"High temperature detected: {sensor_data.temperature}°C.")
+        if sensor_data.humidity >= HUMIDITY_ALERT:
+            msg.append(f"High humidity detected: {sensor_data.humidity}%.")
         async with httpx.AsyncClient() as client:
             await client.post(
                 WEBHOOK_URL,
-                json={
-                    "content": "\n".join(msg)
-                },
+                json={"content": "\n".join(msg)},
             )
-    return db.insert_data(data)
+    return sensor_data
 
 
 @app.websocket("/ws")

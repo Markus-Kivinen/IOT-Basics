@@ -43,6 +43,7 @@ reportUnknownVariableType = "none"
 reportUnannotatedClassAttribute = "none"
 reportMissingTypeStubs = "none"
 reportAny = "none"
+reportImplicitStringConcatenation = "none"
 
 # ###################################################################
 # ruff options:

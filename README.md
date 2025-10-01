@@ -4,16 +4,20 @@
 
 
 ### Configure
-Configure Embedded/10_wifi.py: replace API_URL with your machine’s IP and port  
+In `Embedded/10_wifi.py`: replace API_URL with your machine’s IP and port  
 Download Pico W firmware and place it in Embedded, add the path to `Embedded/wokwi.toml`  
 Install Wokwi VS Code extension https://docs.wokwi.com/vscode/getting-started  
+
+### Webhook ( optional )
+Create a `.env` file based on `.env.example` and set your WEBHOOK_URL  
+use TEMP_ALERT and HUMIDITY_ALERT to set alert thresholds
 
 ### Install
 Create the virtual environment ( choose one ):
 ```bash
 python -m venv .venv
 # Using uv
-uv venv  
+uv venv --python 3.13
 ``` 
 
 Activate the virtual environment:

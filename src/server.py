@@ -1,25 +1,43 @@
-import sys
+import asyncio
+import datetime as date
+import logging
+from os import getenv
+from typing import Annotated
 
+import dotenv
+import httpx
 import uvicorn
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Query, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 
 from src import db
 from src.models import SensorData, User, UserData
 
+dotenv.load_dotenv()
+logger = logging.getLogger(__name__)
+
 app = FastAPI()
+templates = Jinja2Templates(directory="templates")
+
+
+temp_alert = float(getenv("TEMP_ALERT", "50.0"))
+humidity_alert = float(getenv("HUMIDITY_ALERT", "80.0"))
+WEBHOOK_URL = getenv("WEBHOOK_URL")
 
 
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)
-async def root() -> HTMLResponse:
-    api_url = app.url_path_for("get_sensor_data")
-    response_html = (
-        "<h1>Hello World</h1>"
-        f'<p>Sensor data is available at <a href="{api_url}">{api_url}</a></p>'
-        f'<p>API Documentation is available at <a href="{app.docs_url}">{app.docs_url}</a>'
-        f' and <a href="{app.redoc_url}">{app.redoc_url}</a></p>'
+async def root(request: Request) -> HTMLResponse:
+    api_url: str = app.url_path_for("get_sensor_data")
+    return templates.TemplateResponse(
+        "index.html",
+        {
+            "request": request,
+            "api_url": api_url,
+            "docs_url": app.docs_url,
+            "redoc_url": app.redoc_url,
+        },
     )
-    return HTMLResponse(content=response_html)
 
 
 @app.get(
@@ -27,8 +45,15 @@ async def root() -> HTMLResponse:
     name="get_sensor_data",
     responses={200: {"model": list[SensorData]}},
 )
-async def get_sensor_data() -> list[SensorData]:
-    return db.get_data()
+async def get_sensor_data(
+    start: Annotated[
+        str | None, Query(description="Start date (YYYY-MM-DD)")
+    ] = None,
+    end: Annotated[
+        str | None, Query(description="End date (YYYY-MM-DD)")
+    ] = None,
+) -> list[SensorData]:
+    return db.get_data(start, end)
 
 
 @app.post(
@@ -38,8 +63,48 @@ async def get_sensor_data() -> list[SensorData]:
     responses={201: {"model": SensorData}},
 )
 async def post_sensor_data(data: SensorData, request: Request) -> SensorData:
+    if WEBHOOK_URL and (data.temperature >= temp_alert or data.humidity >= humidity_alert):
+        # get current time
+        timestamp = date.datetime.now(tz=date.UTC).strftime("%Y-%m-%d %H:%M:%S")
+        msg = [f"**{timestamp}**."]
+        if data.temperature >= temp_alert:
+            msg.append(f"High temperature detected: {data.temperature}°C.")
+        if data.humidity >= humidity_alert:
+            msg.append(f"High humidity detected: {data.humidity}%.")
+        async with httpx.AsyncClient() as client:
+            await client.post(
+                WEBHOOK_URL,
+                json={
+                    "content": "\n".join(msg)
+                },
+            )
     db.insert_data(data)
     return data
+
+
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket) -> None:
+    await websocket.accept()
+    try:
+        while True:
+            data: list[dict[str, str]] = [
+                d.model_dump() for d in db.get_data()
+            ]
+            await websocket.send_json(data)
+            await asyncio.sleep(5)
+
+    except WebSocketDisconnect:
+        logger.info("WebSocket disconnected")
+    except asyncio.CancelledError:
+        logger.warning("WebSocket task was cancelled")
+        raise
+    except Exception as e:
+        logger.exception("Unexpected error in WebSocket connection: %s", e)
+    finally:
+        try:
+            await websocket.close()
+        except RuntimeError:
+            logger.warning("WebSocket already closed")
 
 
 @app.post(

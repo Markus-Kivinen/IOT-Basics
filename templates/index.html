@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sensor Dashboard</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      #chart {
+        width: 700px;
+        height: 400px;
+      }
+      .axis-label {
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+
+    <h2>Temperature & Humidity Chart</h2>
+    <form id="date-form" onsubmit="event.preventDefault(); updateWebSocket();">
+      <label for="start-date">Start date:</label>
+      <input type="date" name="start" id="start-date" />
+
+      <label for="end-date">End date:</label>
+      <input type="date" name="end" id="end-date" />
+
+      <button type="submit">Update</button>
+    </form>
+    <div id="chart"></div>
+
+    <h2>Docs</h2>
+    <p>Raw Sensor data is available at <a href="{{ api_url }}">{{ api_url }}</a></p>
+    <p>
+      API Documentation is available at
+      <a href="{{ docs_url }}">{{ docs_url }}</a>
+      and <a href="{{ redoc_url }}">{{ redoc_url }}</a>
+    </p>
+
+    <script>
+      let ws = null;
+      let start = "";
+      let end = "";
+
+      function connectWebSocket() {
+        if (ws) {
+          ws.close();
+        }
+        let wsUrl =
+          (location.protocol === "https:" ? "wss://" : "ws://") +
+          location.host +
+          "/ws";
+        ws = new WebSocket(wsUrl);
+
+        ws.onmessage = function (event) {
+          let data = JSON.parse(event.data);
+          if (start || end) {
+            data = data.filter(function (d) {
+              if (!d.timestamp) return false;
+              let ts = d.timestamp.split(" ")[0];
+              if (start && ts < start) return false;
+              if (end && ts > end) return false;
+              return true;
+            });
+          }
+          drawChart(data);
+        };
+      }
+
+      function updateWebSocket() {
+        start = document.getElementById("start-date").value;
+        end = document.getElementById("end-date").value;
+        connectWebSocket();
+      }
+
+      function drawChart(data) {
+        d3.select("#chart").selectAll("*").remove();
+        const margin = { top: 30, right: 30, bottom: 50, left: 60 };
+        const width = 700 - margin.left - margin.right;
+        const height = 400 - margin.top - margin.bottom;
+        const svg = d3
+          .select("#chart")
+          .append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform", `translate(${margin.left},${margin.top})`);
+        if (!data.length) return;
+        let parseDate = d3.utcParse("%Y-%m-%d %H:%M:%S");
+        data.forEach((d) => {
+          d.timestamp = d.timestamp ? parseDate(d.timestamp) : new Date();
+        });
+        let x = d3
+          .scaleTime()
+          .domain(d3.extent(data, (d) => d.timestamp))
+          .range([0, width]);
+        let yTemp = d3
+          .scaleLinear()
+          .domain([
+            d3.min(data, (d) => d.temperature) - 2,
+            d3.max(data, (d) => d.temperature) + 2,
+          ])
+          .range([height, 0]);
+        let yHum = d3
+          .scaleLinear()
+          .domain([
+            d3.min(data, (d) => d.humidity) - 5,
+            d3.max(data, (d) => d.humidity) + 5,
+          ])
+          .range([height, 0]);
+        svg
+          .append("g")
+          .attr("transform", `translate(0,${height})`)
+          .call(d3.axisBottom(x));
+        svg.append("g").call(d3.axisLeft(yTemp));
+        svg
+          .append("g")
+          .attr("transform", `translate(${width},0)`)
+          .call(d3.axisRight(yHum));
+        svg
+          .append("text")
+          .attr("class", "axis-label")
+          .attr("x", width / 2)
+          .attr("y", height + 40)
+          .attr("text-anchor", "middle")
+          .text("Timestamp");
+        svg
+          .append("text")
+          .attr("class", "axis-label")
+          .attr("transform", "rotate(-90)")
+          .attr("y", -50)
+          .attr("x", -height / 2)
+          .attr("text-anchor", "middle")
+          .text("Temperature (°C)");
+        svg
+          .append("text")
+          .attr("class", "axis-label")
+          .attr("transform", "rotate(-90)")
+          .attr("y", width + 20)
+          .attr("x", -height / 2)
+          .attr("text-anchor", "middle")
+          .text("Humidity (%)");
+        svg
+          .append("path")
+          .datum(data)
+          .attr("fill", "none")
+          .attr("stroke", "red")
+          .attr("stroke-width", 2)
+          .attr(
+            "d",
+            d3
+              .line()
+              .x((d) => x(d.timestamp))
+              .y((d) => yTemp(d.temperature))
+          );
+        svg
+          .append("path")
+          .datum(data)
+          .attr("fill", "none")
+          .attr("stroke", "blue")
+          .attr("stroke-width", 2)
+          .attr(
+            "d",
+            d3
+              .line()
+              .x((d) => x(d.timestamp))
+              .y((d) => yHum(d.humidity))
+          );
+      }
+
+      window.onload = connectWebSocket;
+    </script>
+  </body>
+</html>

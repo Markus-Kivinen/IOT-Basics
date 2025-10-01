@@ -36,17 +36,19 @@ class Database:
         )
         self.conn.commit()
 
-    def get_data(self) -> list[SensorData]:
+    def get_data(self, start: str | None = None, end: str | None = None) -> list[SensorData]:
         cursor = self.conn.cursor()
         cursor.execute(
             """
-            SELECT temperature, humidity, status FROM sensor_data
+            SELECT temperature, humidity, status, timestamp FROM sensor_data
+            WHERE (timestamp >= ? OR ? IS NULL) AND (timestamp <= ? OR ? IS NULL)
             ORDER BY timestamp DESC
-            """
+            """,
+            (start, start, end, end),
         )
         rows = cursor.fetchall()
         return [
-            SensorData(temperature=row[0], humidity=row[1], status=row[2])
+            SensorData(temperature=row[0], humidity=row[1], status=row[2], timestamp=row[3])
             for row in rows
         ]
 

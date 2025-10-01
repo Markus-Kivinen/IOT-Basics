@@ -5,12 +5,13 @@ class SensorData(BaseModel):
     temperature: float
     humidity: float
     status: str
+    timestamp: str | None = None
 
     model_config = {
         "json_schema_extra": {
             "examples": [
-                {"temperature": 22.5, "humidity": 55, "status": "OK"},
-                {"temperature": 50.0, "humidity": 65, "status": "Warning"},
+                {"temperature": 22.5, "humidity": 55, "status": "OK", "timestamp": "2025-01-01T12:00:00"},
+                {"temperature": 50.0, "humidity": 65, "status": "Warning", "timestamp": "2025-01-01T12:00:00"},
             ],
         },
     }

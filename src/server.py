@@ -12,7 +12,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 from src import db
-from src.models import SensorData, User, UserData
+from src.models import SensorData, SensorInput, User, UserData
 
 dotenv.load_dotenv()
 logger = logging.getLogger(__name__)
@@ -62,7 +62,7 @@ async def get_sensor_data(
     status_code=201,
     responses={201: {"model": SensorData}},
 )
-async def post_sensor_data(data: SensorData, request: Request) -> SensorData:
+async def post_sensor_data(data: SensorInput, request: Request) -> SensorData:
     if WEBHOOK_URL and (data.temperature >= TEMP_ALERT or data.humidity >= HUMIDITY_ALERT):
         timestamp = date.datetime.now(tz=date.UTC).strftime("%Y-%m-%d %H:%M:%S")
         msg = [f"**{timestamp}**."]
@@ -77,8 +77,7 @@ async def post_sensor_data(data: SensorData, request: Request) -> SensorData:
                     "content": "\n".join(msg)
                 },
             )
-    db.insert_data(data)
-    return data
+    return db.insert_data(data)
 
 
 @app.websocket("/ws")

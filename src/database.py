@@ -2,7 +2,7 @@ import sqlite3
 
 import bcrypt
 
-from src.models import SensorData, User
+from src.models import SensorInput, SensorData, User
 
 
 class Database:
@@ -25,7 +25,7 @@ class Database:
         )
         self.conn.commit()
 
-    def insert_data(self, data: "SensorData") -> None:
+    def insert_data(self, data: "SensorInput") -> SensorData:
         cursor = self.conn.cursor()
         cursor.execute(
             """
@@ -35,6 +35,22 @@ class Database:
             (data.temperature, data.humidity, data.status),
         )
         self.conn.commit()
+        row_id: int = cursor.lastrowid
+        cursor.execute(
+            """
+            SELECT temperature, humidity, status, timestamp
+            FROM sensor_data WHERE id = ?
+            """,
+            (row_id,),
+        )
+        row = cursor.fetchone()
+        return SensorData(
+            temperature=row[0],
+            humidity=row[1],
+            status=row[2],
+            timestamp=row[3],
+        )
+
 
     def get_data(self, start: str | None = None, end: str | None = None) -> list[SensorData]:
         cursor = self.conn.cursor()

@@ -15,31 +15,25 @@ Create a `src/.env` file based on `src/.env.example` and set your WEBHOOK_URL
 use TEMP_ALERT and HUMIDITY_ALERT to set alert thresholds
 
 ### Install
-Create the virtual environment ( choose one ):
+
+Using Pip
 ```bash
 python -m venv .venv
-# Using uv
-uv venv --python 3.13
-``` 
 
-Activate the virtual environment:
-```bash
 # Linux / macOS
 source .venv/bin/activate
 # Windows (PowerShell)
 .venv\Scripts\activate
+
+pip install -e .
 ```
 
-Install dependencies ( choose one ):
+Using uv 
 ```bash
-pip install -r pylock.toml
-# Using uv
-uv pip install -r pylock.toml
+uv venv --python 3.13
 ```
 
 ### Running the Server
-After activating the environment:  
-
 Start the server:
 ```bash
 fastapi run src/server.py  # Production mode

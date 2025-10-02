@@ -1,7 +1,5 @@
 ### Requirements
 - Python 3.13+
-- npm
-
 
 ### Configure
 In `Embedded/10_wifi.py`: replace API_URL with your machine’s IP and port  

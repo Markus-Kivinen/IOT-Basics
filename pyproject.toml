@@ -1,6 +1,11 @@
 [project]
 name = "IoT"
 version = "0.1.0"
+authors = [
+  {name = "Markus Kivinen", email = "markus.kivinen@student.lab.fi"}
+]
+readme = "README.md"
+license = {text = "MIT"}
 dependencies = [
   "fastapi[standard]>=0.116.2",
   "uvicorn[standard]>=0.35.0",
@@ -13,6 +18,9 @@ requires-python = ">=3.13"
 stubs = [
   "micropython-rp2-pico_w-stubs"
 ]
+
+[project.urls]
+Homepage = "https://github.com/Markus-Kivinen/IOT-Basics"
 
 [tool.uv]
 package = true

@@ -2,19 +2,13 @@
 - Python 3.13+
 
 ### Configure
-In `Embedded/10_wifi.py`: replace API_URL with your machine’s IP and port  
-Download Pico W firmware and place it in Embedded, add the path to `Embedded/wokwi.toml`  
-Install Wokwi VS Code extension https://docs.wokwi.com/vscode/getting-started  
-
-### Webhook ( optional )
+- Set API_URL in `Embedded/10_wifi.py` to your machine IP.
+- Copy `src/.env.example` → `src/.env` and set `WEBHOOK_URL` (optional).
+- Use `TEMP_ALERT` / `HUMIDITY_ALERT` in `.env` to tune alerts.  
 <img width="355" height="107" alt="image" src="https://github.com/user-attachments/assets/28cbfc28-4f09-439d-aa98-792734397a0d" />
 
-Create a `src/.env` file based on `src/.env.example` and set your WEBHOOK_URL  
-use TEMP_ALERT and HUMIDITY_ALERT to set alert thresholds
-
 ### Install
-
-Using Pip
+Using pip
 ```bash
 python -m venv .venv
 
@@ -31,26 +25,25 @@ Using uv
 uv venv --python 3.13
 ```
 
-### Running the Server
-Start the server:
+### Run the server
 ```bash
-fastapi run src/server.py  # Production mode
-fastapi dev src/server.py  # Auto-reload
+server  # Production mode
+dev  # Auto-reload
+
 # With uv
 uv run server
 uv run dev
-```
 
-Other options:
-```bash
+# Other options
 uvicorn src.server:app --host 0.0.0.0 --port 8000 
 uvicorn src.server:app --host 0.0.0.0 --port 8000 --reload  
 ```
-<img width="941" height="585" alt="image" src="https://github.com/user-attachments/assets/2e63ef56-b758-4c24-9526-294588f6d6e9" />
+<img width="941" height="585" alt="image" src="https://github.com/user-attachments/assets/2e63ef56-b758-4c24-9526-294588f6d6e9" />  
 
+### Docs
 
 API documentation is available at:  
-http://localhost:8000/docs and http://localhost:8000/redoc
+http://localhost:8000/docs and http://localhost:8000/redoc  
 <img width="996" height="1090" alt="image" src="https://github.com/user-attachments/assets/731ec09d-fd21-4f4e-a7c6-4686f2976253" />
 <img width="1911" height="881" alt="image" src="https://github.com/user-attachments/assets/d5b41d58-6e9a-4b3d-8d4d-eaec6d4793b0" />
 

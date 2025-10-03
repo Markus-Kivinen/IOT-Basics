@@ -1,5 +1,4 @@
 from .database import Database
+from .models import SensorData, SensorInput, User, UserData
 
-db = Database("sensor_data.db")
-
-__all__ = ["db"]
+__all__ = ["Database", "SensorData", "SensorInput", "User", "UserData"]

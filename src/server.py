@@ -18,11 +18,11 @@ from fastapi import (
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-from src import db
-from src.models import SensorData, SensorInput, User, UserData
+from src import Database, SensorData, SensorInput, User, UserData
 
 dotenv.load_dotenv()
 logger = logging.getLogger(__name__)
+database = Database("sensor_data.db")
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -60,7 +60,7 @@ async def get_sensor_data(
         str | None, Query(description="End date (YYYY-MM-DD)")
     ] = None,
 ) -> list[SensorData]:
-    return db.get_data(start, end)
+    return database.get_data(start, end)
 
 
 @app.post(
@@ -70,7 +70,7 @@ async def get_sensor_data(
     responses={201: {"model": SensorData}},
 )
 async def post_sensor_data(data: SensorInput, request: Request) -> SensorData:
-    sensor_data = db.insert_data(data)
+    sensor_data = database.insert_data(data)
     if WEBHOOK_URL and (
         sensor_data.temperature >= TEMP_ALERT or sensor_data.humidity >= HUMIDITY_ALERT
     ):
@@ -99,7 +99,7 @@ async def websocket_endpoint(websocket: WebSocket) -> None:
     try:
         while True:
             data: list[dict[str, str]] = [
-                d.model_dump() for d in db.get_data()
+                d.model_dump() for d in database.get_data()
             ]
             await websocket.send_json(data)
             await asyncio.sleep(5)
@@ -132,7 +132,7 @@ async def websocket_endpoint(websocket: WebSocket) -> None:
     },
 )
 async def create_user(user_data: UserData) -> User:
-    return db.create_user(user_data.username, user_data.password)
+    return database.create_user(user_data.username, user_data.password)
 
 
 @app.get(
@@ -141,7 +141,7 @@ async def create_user(user_data: UserData) -> User:
     responses={200: {"model": list[User]}},
 )
 async def get_users() -> list[User]:
-    return db.get_users()
+    return database.get_users()
 
 
 @app.post(
@@ -168,7 +168,7 @@ async def get_users() -> list[User]:
     },
 )
 async def verify_user(username: str, password: str) -> HTMLResponse:
-    if db.verify_user(username, password):
+    if database.verify_user(username, password):
         return HTMLResponse(content={"message": "User verified successfully"})
     raise HTTPException(status_code=401, detail="Invalid username or password")
 

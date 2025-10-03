@@ -2,7 +2,7 @@ import sqlite3
 
 import bcrypt
 
-from src.models import SensorInput, SensorData, User
+from src.models import SensorData, SensorInput, User
 
 
 class Database:
@@ -23,9 +23,18 @@ class Database:
             )
             """
         )
+        cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT UNIQUE,
+                password TEXT
+            )
+            """
+        )
         self.conn.commit()
 
-    def insert_data(self, data: "SensorInput") -> SensorData:
+    def insert_data(self, data: SensorInput) -> SensorData:
         cursor = self.conn.cursor()
         cursor.execute(
             """
@@ -108,15 +117,6 @@ class Database:
     def create_user(self, username: str, password: str) -> User:
         password = self.get_password_hash(password)
         cursor = self.conn.cursor()
-        cursor.execute(
-            """
-            CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                username TEXT UNIQUE,
-                password TEXT
-            )
-            """
-        )
         cursor.execute(
             """
             INSERT INTO users (username, password)

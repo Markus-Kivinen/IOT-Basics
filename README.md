@@ -2,8 +2,9 @@
 - Python 3.13+
 
 ### Configure
-- Set API_URL in `Embedded/10_wifi.py` to your machine IP.
-- Copy `src/.env.example` → `src/.env` and set `WEBHOOK_URL` (optional).
+- Download RPI_PICO_W-20250911-v1.26.1.uf2 from https://micropython.org/download/RPI_PICO_W/ to Embedded folder.
+- Set API_URL in `Embedded/10_wifi.py` to your machine IP.  
+- Copy `src/.env.example` → `src/.env` and set `WEBHOOK_URL` (optional).  
 - Use `TEMP_ALERT` / `HUMIDITY_ALERT` in `.env` to tune alerts.  
 <img width="355" height="107" alt="image" src="https://github.com/user-attachments/assets/28cbfc28-4f09-439d-aa98-792734397a0d" />
 

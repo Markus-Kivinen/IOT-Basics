@@ -55,8 +55,11 @@ http://localhost:8000/docs and http://localhost:8000/redoc
 Start Wokwi simulator with F1 -> `Wokwi: Start Simulation` or by opening diagram.json  
 Wokwi simulator has to be visible to connect to it with mpremote
 ```
-# With .venv activated
+# Install ssd1306 driver from micropython-lib
+python -m mpremote connect port:rfc2217://localhost:4000 mip install ssd1306
 python -m mpremote connect port:rfc2217://localhost:4000 run Embedded/10_wifi.py
+
 # With uv
+uv run mpremote connect port:rfc2217://localhost:4000 mip install ssd1306
 uv run mpremote connect port:rfc2217://localhost:4000 run Embedded/10_wifi.py
 ```

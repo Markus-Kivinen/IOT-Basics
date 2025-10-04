@@ -38,7 +38,7 @@ dev = "src.server:start_dev_server"
 # ###################################################################
 
 [tool.basedpyright]
-ignore = ["**/typings"]
+ignore = ["**/typings", "Embedded/ssd1306.py"]
 exclude = [".*", "__*", "**/typings"]
 
 stubPath = "typings"
@@ -76,3 +76,4 @@ ignore = [
 
 [tool.ruff]
 line-length = 120
+exclude = ["Embedded/ssd1306.py"]

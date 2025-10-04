@@ -63,3 +63,6 @@ python -m mpremote connect port:rfc2217://localhost:4000 run Embedded/10_wifi.py
 uv run mpremote connect port:rfc2217://localhost:4000 mip install ssd1306
 uv run mpremote connect port:rfc2217://localhost:4000 run Embedded/10_wifi.py
 ```
+<img width="1097" height="1036" alt="image" src="https://github.com/user-attachments/assets/887ecccf-e2d7-4613-bca4-ab883fd35903" />
+<img width="794" height="903" alt="image" src="https://github.com/user-attachments/assets/40135435-925e-4a94-91de-a4f0278d9b10" />
+

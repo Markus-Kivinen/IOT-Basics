@@ -41,6 +41,10 @@ uvicorn src.server:app --host 0.0.0.0 --port 8000 --reload
 ```
 <img width="941" height="585" alt="image" src="https://github.com/user-attachments/assets/2e63ef56-b758-4c24-9526-294588f6d6e9" />  
 
+### Webhooks
+Chart refreshes every 5 seconds using a webhook
+
+
 ### Docs
 
 API documentation is available at:  

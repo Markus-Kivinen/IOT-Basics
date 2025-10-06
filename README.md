@@ -1,6 +1,15 @@
 ### Requirements
 - Python 3.13+
 
+### Folder structure
+* Embedded
+  * Micropython code for PicoW, 10_wifi.py sends data to backend
+* src
+  * source code for the FastAPI backend
+* Templates
+  * Jinja2Template for the frontend, server from the backend
+
+
 ### Configure
 - Download RPI_PICO_W-20250911-v1.26.1.uf2 from https://micropython.org/download/RPI_PICO_W/ to Embedded folder.
 - Set API_URL in `Embedded/10_wifi.py` to your machine IP.  

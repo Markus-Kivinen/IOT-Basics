@@ -1,6 +1,10 @@
 ### Requirements
 - Python 3.13+
 
+### Live version
+Mockup site is live at https://iot-basics.onrender.com/  
+The data is randomly generated and does not persist.
+
 ### Folder structure
 * Embedded
   * Micropython code for PicoW, 10_wifi.py sends data to backend
